@@ -1,0 +1,24 @@
+version: '3.12'
+
+services:
+  ml-streamlit-app:
+    build:
+      context: ../..
+      dockerfile: src_code/deployment/app/Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../..:/app
+    command: streamlit run src_code/deployment/app/model_app.py
+    depends_on:
+      - ml-api-app
+
+  ml-api-app:
+    build:
+      context: ../..
+      dockerfile: src_code/deployment/api/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../..:/app
+    command: fastapi run src_code/deployment/api/model_api.py --port 8000
